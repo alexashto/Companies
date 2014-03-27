@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Persons
 {
-    interface IPersonAccessor
+    public interface IPersonAccessor
     {
         List<Person> GetAll();
         List<Person> GetByName(string name);

@@ -1,0 +1,37 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using NUnit.Framework;
+using Persons;
+
+namespace PersonTests
+{
+    [TestFixture]
+    public class PersonUnitTests
+    {
+
+        [Test]
+        public void InsertAndGetByNameTest()
+        {
+            IPersonAccessor personAccessor = new MemoryPersonAccessor();
+            personAccessor.Insert(new Person("Сидоренко В.А.", DateTime.Parse("01.02.03")));
+            Assert.IsTrue(personAccessor.GetByName("Сидоренко") != null);
+
+        } 
+
+
+        [Test]
+        public void DeleteByNameTest()
+        {
+            IPersonAccessor personAccessor = new MemoryPersonAccessor();
+            personAccessor.DeleteByName("Петров");
+            Assert.AreEqual(8, personAccessor.GetAll().Count());
+            
+        }
+
+
+
+    }
+}

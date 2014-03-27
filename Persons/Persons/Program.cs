@@ -10,7 +10,9 @@ namespace Persons
     {
         static void Main(string[] args)
         {
-            XMLPersonAccessor xmlpa = new XMLPersonAccessor("/db.xml");
+            IPersonAccessor pa = new MemoryPersonAccessor();
+
+            Console.ReadKey();
         }
     }
 }

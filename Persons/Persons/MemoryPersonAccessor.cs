@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Persons
 {
-    class MemoryPersonAccessor : IPersonAccessor
+    public class MemoryPersonAccessor : IPersonAccessor
     {
+ 
+
         public List<Person> GetAll()
         {
             return MemoryDB.Database;
