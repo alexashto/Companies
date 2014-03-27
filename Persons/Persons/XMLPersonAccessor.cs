@@ -3,30 +3,66 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.IO;
+using System.Xml.Serialization;
+
 
 namespace Persons
 {
     class XMLPersonAccessor : IPersonAccessor
     {
+        private XmlDocument xmlDB = new XmlDocument();
+        private XmlSerializer xmlSerializer;
+        private List<Person> personList;
+        private string fileName;
+
+        public XMLPersonAccessor(string fileName)
+        {
+            this.fileName = fileName;
+        }
+
+        private void RefreshXML()
+        {
+             xmlSerializer = new XmlSerializer(typeof(Person));
+             TextWriter writer = new StreamWriter(fileName);
+             xmlSerializer.Serialize(writer, personList);
+             writer.Close();
+        }
+
+        private List<Person> loadFromXML()
+        {
+            FileStream fs = new FileStream(fileName, FileMode.Open);
+            xmlSerializer = new XmlSerializer(typeof(Person));
+            List<Person> resultPersonList = (List<Person>)xmlSerializer.Deserialize(fs);
+            fs.Close();
+            return resultPersonList;
+        }
 
         public List<Person> GetAll()
         {
-            throw new NotImplementedException();
+            personList = loadFromXML();
+            return personList;
         }
 
-        public Person GetByName(string name)
+        public List<Person> GetByName(string name)
         {
-            throw new NotImplementedException();
+            personList = loadFromXML();
+            return personList.FindAll(x => x.FullName.Contains(name));
         }
 
         public void DeleteByName(string name)
         {
-            throw new NotImplementedException();
+            personList = loadFromXML();
+            personList.RemoveAll(x => x.FullName.Contains(name));
+            RefreshXML();
         }
 
         public void Insert(Person person)
         {
-            throw new NotImplementedException();
+            personList = loadFromXML();
+            personList.Add(person);
+            RefreshXML();
         }
     }
 }

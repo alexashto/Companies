@@ -9,7 +9,7 @@ namespace Persons
     interface IPersonAccessor
     {
         List<Person> GetAll();
-        Person GetByName(string name);
+        List<Person> GetByName(string name);
         void DeleteByName(string name);
         void Insert(Person person);
     }

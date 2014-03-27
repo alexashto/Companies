@@ -15,18 +15,17 @@ namespace Persons
 
         public List<Person> GetByName(string name)
         {
-
-            return (List <Person>) MemoryDB.Database.Where(p => p.FullName == name);
+            return MemoryDB.Database.FindAll(x => x.FullName.Contains(name));
         }
 
         public void DeleteByName(string name)
         {
-            throw new NotImplementedException();
+            MemoryDB.Database.RemoveAll(x => x.FullName.Contains(name));
         }
 
         public void Insert(Person person)
         {
-            throw new NotImplementedException();
+            MemoryDB.Database.Add(person);
         }
     }
 }
