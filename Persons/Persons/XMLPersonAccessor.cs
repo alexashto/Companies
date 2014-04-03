@@ -22,7 +22,7 @@ namespace Persons
             this.fileName = fileName;
         }
 
-        private void RefreshXML()
+        private void SaveToXML()
         {
              xmlSerializer = new XmlSerializer(typeof(Person));
              TextWriter writer = new StreamWriter(fileName);
@@ -55,14 +55,14 @@ namespace Persons
         {
             personList = loadFromXML();
             personList.RemoveAll(x => x.FullName.Contains(name));
-            RefreshXML();
+            SaveToXML();
         }
 
         public void Insert(Person person)
         {
             personList = loadFromXML();
             personList.Add(person);
-            RefreshXML();
+            SaveToXML();
         }
     }
 }

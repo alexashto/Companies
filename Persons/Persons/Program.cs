@@ -10,8 +10,11 @@ namespace Persons
     {
         static void Main(string[] args)
         {
-            IPersonAccessor pa = new MemoryPersonAccessor();
-
+            IPersonAccessor pa = new DBPersonAccessor();
+          //  foreach (Person p in pa.GetAll())
+          //      Console.WriteLine("{0}    {1}    {2}",p.FullName, p.Id, p.BirthDate.ToShortDateString());
+            foreach (Person p in pa.GetByName("Петров"))
+                Console.WriteLine("{0}    {1}    {2}", p.FullName, p.Id, p.BirthDate.ToShortDateString());
             Console.ReadKey();
         }
     }

@@ -16,7 +16,7 @@ namespace PersonTests
         public void InsertAndGetByNameTest()
         {
             IPersonAccessor personAccessor = new MemoryPersonAccessor();
-            personAccessor.Insert(new Person("Сидоренко В.А.", DateTime.Parse("01.02.03")));
+            personAccessor.Insert(new Person(11, "Сидоренко В.А.", DateTime.Parse("01.02.03")));
             Assert.IsTrue(personAccessor.GetByName("Сидоренко") != null);
 
         } 
