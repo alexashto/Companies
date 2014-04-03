@@ -12,8 +12,7 @@ namespace Persons
 {
     class XMLPersonAccessor : IPersonAccessor
     {
-        private XmlDocument xmlDB = new XmlDocument();
-        private XmlSerializer xmlSerializer;
+
         private List<Person> personList;
         private string fileName;
 
@@ -24,25 +23,26 @@ namespace Persons
 
         private void SaveToXML()
         {
-             xmlSerializer = new XmlSerializer(typeof(Person));
-             TextWriter writer = new StreamWriter(fileName);
-             xmlSerializer.Serialize(writer, personList);
-             writer.Close();
+            using (FileStream fileStream = new FileStream(fileName, FileMode.Create))
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Person>));
+                xmlSerializer.Serialize(fileStream, personList);
+            }
         }
 
         private List<Person> loadFromXML()
         {
-            FileStream fs = new FileStream(fileName, FileMode.Open);
-            xmlSerializer = new XmlSerializer(typeof(Person));
-            List<Person> resultPersonList = (List<Person>)xmlSerializer.Deserialize(fs);
-            fs.Close();
-            return resultPersonList;
+            using (FileStream fileStream = new FileStream(fileName, FileMode.Open))
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Person>));
+                personList = (List<Person>)xmlSerializer.Deserialize(fileStream);
+                return personList;
+            }
         }
 
         public List<Person> GetAll()
         {
-            personList = loadFromXML();
-            return personList;
+            return loadFromXML();
         }
 
         public List<Person> GetByName(string name)

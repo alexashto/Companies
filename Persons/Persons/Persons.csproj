@@ -63,6 +63,7 @@
       <DependentUpon>AppDBDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="DBPersonAccessor.cs" />
+    <Compile Include="FieldAttribute.cs" />
     <Compile Include="MemoryPersonAccessor.cs" />
     <Compile Include="IPersonAccessor.cs" />
     <Compile Include="MemoryDB.cs" />
@@ -74,6 +75,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="TableAttribute.cs" />
     <Compile Include="XMLPersonAccessor.cs" />
   </ItemGroup>
   <ItemGroup>
