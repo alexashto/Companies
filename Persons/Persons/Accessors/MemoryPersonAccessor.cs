@@ -20,14 +20,22 @@ namespace Persons
             return MemoryDB.Database.FindAll(x => x.FullName.Contains(name));
         }
 
-        public void DeleteByName(string name)
+        public void DeleteById(int id)
         {
-            MemoryDB.Database.RemoveAll(x => x.FullName.Contains(name));
+            MemoryDB.Database.RemoveAll(x => x.Id.Equals(id));
         }
 
         public void Insert(Person person)
         {
             MemoryDB.Database.Add(person);
         }
+
+
+        public Person GetById(int id)
+        {
+            return MemoryDB.Database.Find(x => x.Id.Equals(id));
+        }
+
+
     }
 }

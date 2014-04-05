@@ -57,16 +57,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppDBDataSet.Designer.cs">
+    <Compile Include="DataStorage\AppDBDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>AppDBDataSet.xsd</DependentUpon>
     </Compile>
-    <Compile Include="DBPersonAccessor.cs" />
-    <Compile Include="FieldAttribute.cs" />
-    <Compile Include="MemoryPersonAccessor.cs" />
-    <Compile Include="IPersonAccessor.cs" />
-    <Compile Include="MemoryDB.cs" />
+    <Compile Include="Accessors\DBPersonAccessor.cs" />
+    <Compile Include="Accessors\MemoryPersonAccessor.cs" />
+    <Compile Include="Accessors\IPersonAccessor.cs" />
+    <Compile Include="DataStorage\MemoryDB.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,20 +74,19 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="TableAttribute.cs" />
-    <Compile Include="XMLPersonAccessor.cs" />
+    <Compile Include="Accessors\XMLPersonAccessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="AppDBDataSet.xsc">
+    <None Include="DataStorage\AppDBDataSet.xsc">
       <DependentUpon>AppDBDataSet.xsd</DependentUpon>
     </None>
-    <None Include="AppDBDataSet.xsd">
+    <None Include="DataStorage\AppDBDataSet.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>AppDBDataSet.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <None Include="AppDBDataSet.xss">
+    <None Include="DataStorage\AppDBDataSet.xss">
       <DependentUpon>AppDBDataSet.xsd</DependentUpon>
     </None>
     <None Include="Properties\Settings.settings">
@@ -97,7 +95,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="AppDB.sdf">
+    <Content Include="DataStorage\AppDB.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

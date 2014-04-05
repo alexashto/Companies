@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlServerCe;
+using System.Data;
 
 namespace Persons
 {
     class DBPersonAccessor : IPersonAccessor
     {
         private SqlCeConnection connection;
-        private const string CONNECTION_CONFIGURATION = "Data Source = AppDB.sdf; Password = ''";
+        private const string CONNECTION_CONFIGURATION = "Data Source = DataStorage/AppDB.sdf; Password = ''";
 
         public DBPersonAccessor()
         {
@@ -36,13 +37,14 @@ namespace Persons
             
         }
 
-        public void DeleteByName(string name) //не работает, вероятно запрос написан с ошибкой
+        public void DeleteById(int Id) //не работает, вероятно запрос написан с ошибкой
         {
             using (connection = new SqlCeConnection(CONNECTION_CONFIGURATION))
             {
                 connection.Open();
                 SqlCeCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "DELETE FROM PersonTable WHERE NameField LIKE '%" + name + "%'";
+                cmd.CommandText = "DELETE FROM PersonTable WHERE IdField =" + Id.ToString();
+
                 cmd.ExecuteNonQuery();
 
             }
@@ -55,7 +57,9 @@ namespace Persons
             {
                 connection.Open();
                 SqlCeCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "INSERT INTO PersonTable VALUES ("+person.Id+","+person.FullName+","+person.BirthDate.ToShortDateString()+")";
+                cmd.CommandText = "INSERT INTO PersonTable VALUES (@Name, @BirthDate)";
+                cmd.Parameters.Add("@Name", SqlDbType.NVarChar, 60).Value = person.FullName;
+                cmd.Parameters.Add("@BirthDate", SqlDbType.NVarChar, 60).Value = person.FullName;
                 cmd.ExecuteNonQuery();
 
             }
@@ -67,9 +71,6 @@ namespace Persons
 
             using (connection = new SqlCeConnection(CONNECTION_CONFIGURATION))
             {
-
-      
-          
                 connection.Open();
                 SqlCeCommand cmd = connection.CreateCommand();
                 cmd.CommandText = query;
@@ -98,6 +99,14 @@ namespace Persons
         }
 
 
+
+
+
+        public Person GetById(int id)
+        {
+            string query = "SELECT * FROM PersonTable WHERE IdField = ";
+            return GetPersonListByQuery(query)[0];
+        }
 
     }
 

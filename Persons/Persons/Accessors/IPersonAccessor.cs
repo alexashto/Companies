@@ -10,7 +10,8 @@ namespace Persons
     {
         List<Person> GetAll();
         List<Person> GetByName(string name);
-        void DeleteByName(string name);
+        Person GetById(int id);
+        void DeleteById(int id);
         void Insert(Person person);
     }
 }

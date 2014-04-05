@@ -26,7 +26,7 @@ namespace Persons.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=|DataDirectory|\\AppDB.sdf")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=|DataDirectory|\\DataStorage\\AppDB.sdf")]
         public string AppDBConnectionString {
             get {
                 return ((string)(this["AppDBConnectionString"]));

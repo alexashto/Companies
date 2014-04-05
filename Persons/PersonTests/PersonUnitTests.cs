@@ -26,7 +26,7 @@ namespace PersonTests
         public void DeleteByNameTest()
         {
             IPersonAccessor personAccessor = new MemoryPersonAccessor();
-            personAccessor.DeleteByName("Петров");
+            personAccessor.DeleteById("Петров");
             Assert.AreEqual(8, personAccessor.GetAll().Count());
             
         }

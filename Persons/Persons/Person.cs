@@ -20,5 +20,10 @@ namespace Persons
             FullName = fullName;
             BirthDate = birthDate;
         }
+
+        public Person(string fullName, DateTime birthDate) : this( 0, fullName, birthDate )
+	    {
+                
+	    }
     }
 }

@@ -51,7 +51,7 @@ namespace Persons
             return personList.FindAll(x => x.FullName.Contains(name));
         }
 
-        public void DeleteByName(string name)
+        public void DeleteById(string name)
         {
             personList = loadFromXML();
             personList.RemoveAll(x => x.FullName.Contains(name));
@@ -63,6 +63,42 @@ namespace Persons
             personList = loadFromXML();
             personList.Add(person);
             SaveToXML();
+        }
+
+
+        public Person GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        List<Person> IPersonAccessor.GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        List<Person> IPersonAccessor.GetByName(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        Person IPersonAccessor.GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IPersonAccessor.DeleteById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IPersonAccessor.Insert(Person person)
+        {
+            throw new NotImplementedException();
         }
     }
 }
