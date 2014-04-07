@@ -37,30 +37,36 @@ namespace Persons
             
         }
 
-        public void DeleteById(int Id) //не работает, вероятно запрос написан с ошибкой
+        public void DeleteById(int Id) 
         {
             using (connection = new SqlCeConnection(CONNECTION_CONFIGURATION))
             {
-                connection.Open();
-                SqlCeCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "DELETE FROM PersonTable WHERE IdField =" + Id.ToString();
 
-                cmd.ExecuteNonQuery();
-
+                using (SqlCeCommand cmd = new SqlCeCommand("DELETE FROM PersonTable WHERE IdField = @Id", connection))
+                {
+                    cmd.Parameters.Add("@Id", SqlDbType.Int, 4).Value = Id;
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
             }
 
         }
 
-        public void Insert(Person person) //не работает, вероятно запрос написан с ошибкой
+        public void Insert(Person person)
         {
             using (connection = new SqlCeConnection(CONNECTION_CONFIGURATION))
             {
-                connection.Open();
-                SqlCeCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "INSERT INTO PersonTable VALUES (@Name, @BirthDate)";
-                cmd.Parameters.Add("@Name", SqlDbType.NVarChar, 60).Value = person.FullName;
-                cmd.Parameters.Add("@BirthDate", SqlDbType.NVarChar, 60).Value = person.FullName;
-                cmd.ExecuteNonQuery();
+
+                using (SqlCeCommand cmd = new SqlCeCommand("INSERT INTO PersonTable (NameField, AgeField) VALUES (@Name, @Age)", connection))
+                {
+                   
+                    cmd.Parameters.Add("@Name", SqlDbType.NVarChar, 60).Value = person.FullName;
+                    cmd.Parameters.Add("@Age", SqlDbType.Int, 4).Value = person.Age;
+                    connection.Open();
+                    cmd.ExecuteNonQuery();
+                    connection.Close();
+                }
 
             }
         }
@@ -82,8 +88,8 @@ namespace Persons
                 {
                     int id = reader.GetInt32(0);
                     string fullName = reader.GetString(1);
-                    string birthDate = reader.GetString(2);
-                    Person readPerson = new Person(id, fullName, DateTime.Parse(birthDate));
+                    int age = reader.GetInt32(2);
+                    Person readPerson = new Person(id, fullName, age);
                     result.Add(readPerson);
                 }
 

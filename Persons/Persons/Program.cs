@@ -11,21 +11,30 @@ namespace Persons
         static void Main(string[] args)
         {
            IPersonAccessor pa = new DBPersonAccessor();
-            foreach (Person p in pa.GetAll())
-                Console.WriteLine("{0}    {1}    {2}", p.Id, p.FullName, p.BirthDate.ToShortDateString());
+ 
+
+         
+           
+            //
+            //pa.Insert(new Person("Бондаренко Р.А.", 25));
 
             Console.WriteLine();
-            foreach (Person p in pa.GetByName("Петров"))
-                Console.WriteLine("{0}    {1}    {2}", p.FullName, p.Id, p.BirthDate.ToShortDateString());
 
-            Console.ReadKey();
-            pa.DeleteById(1);
-            pa.Insert(new Person("Бондаренко Р.А.", DateTime.Parse("01.01.1985")));
-
-            Console.ReadKey();
             foreach (Person p in pa.GetAll())
-                Console.WriteLine("{0}    {1}    {2}",p.FullName, p.Id, p.BirthDate.ToShortDateString());
-            Console.ReadKey(); 
+                Console.WriteLine("{0}    {1}    {2}",p.FullName, p.Id, p.Age.ToString());
+
+            Console.WriteLine();
+
+            Person prs = pa.GetById(1);
+
+
+
+             
+            Console.WriteLine("{0}    {1}    {2}", prs.FullName, prs.Id, prs.Age.ToString());
+
+
+
+            Console.ReadKey();
         }
     }
 }

@@ -10,18 +10,18 @@ namespace Persons
     {
         public int Id { get; set; }
         public string FullName { get; set; }
-        public DateTime BirthDate { get; set; }
+        public int Age { get; set; }
 
         public Person() { }
 
-        public Person(int id, string fullName, DateTime birthDate)
+        public Person(int id, string fullName, int age)
         {
             Id = id;
             FullName = fullName;
-            BirthDate = birthDate;
+            Age = age;
         }
 
-        public Person(string fullName, DateTime birthDate) : this( 0, fullName, birthDate )
+        public Person(string fullName, int age) : this( 0, fullName, age )
 	    {
                 
 	    }
