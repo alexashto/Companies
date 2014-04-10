@@ -57,6 +57,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Accessors\MyOrmAccessor.cs" />
+    <Compile Include="DataEntity\BaseEntity.cs" />
+    <Compile Include="DataEntity\Company.cs" />
     <Compile Include="DataStorage\AppDBDataSet.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -64,9 +67,10 @@
     </Compile>
     <Compile Include="Accessors\DBPersonAccessor.cs" />
     <Compile Include="Accessors\MemoryPersonAccessor.cs" />
-    <Compile Include="Accessors\IPersonAccessor.cs" />
+    <Compile Include="Accessors\IEntityAccessor.cs" />
     <Compile Include="DataStorage\MemoryDB.cs" />
-    <Compile Include="Person.cs" />
+    <Compile Include="FieldAttribute.cs" />
+    <Compile Include="DataEntity\Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -75,6 +79,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Accessors\XMLPersonAccessor.cs" />
+    <Compile Include="TableAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -121,6 +126,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

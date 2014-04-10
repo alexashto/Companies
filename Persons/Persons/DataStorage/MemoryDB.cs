@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Persons.DataEntity;
 
-namespace Persons
+namespace Persons.Data
 {
-    class MemoryDB
+    class MemoryDB  
     {
         public static List<Person> Database = new List<Person> {
 

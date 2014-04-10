@@ -4,12 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Persons
+
+namespace Persons.DataEntity
 {
-    public class Person
+    
+    [Table(TableName = "PersonTable")]
+    public class Person : BaseEntity
     {
-        public int Id { get; set; }
+
+
+        [Field(FieldName = "NameField", FieldType = "string")]
         public string FullName { get; set; }
+
+        [Field(FieldName = "AgeField", FieldType = "string")]
         public int Age { get; set; }
 
         public Person() { }

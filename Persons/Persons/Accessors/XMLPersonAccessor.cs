@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.IO;
 using System.Xml.Serialization;
+using Persons.DataEntity;
 
 
-namespace Persons
+namespace Persons.Accessors
 {
-    class XMLPersonAccessor : IPersonAccessor
+    class XMLPersonAccessor<T> : IEntityAccessor<T> where T : BaseEntity
     {
 
-        private List<Person> personList;
+        private List<T> personList;
         private string fileName;
 
         public XMLPersonAccessor(string fileName)
@@ -25,80 +26,51 @@ namespace Persons
         {
             using (FileStream fileStream = new FileStream(fileName, FileMode.Create))
             {
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Person>));
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<T>));
                 xmlSerializer.Serialize(fileStream, personList);
             }
         }
 
-        private List<Person> loadFromXML()
+        private List<T> LoadFromXML()
         {
-            using (FileStream fileStream = new FileStream(fileName, FileMode.Open))
+            using (FileStream fileStream = new FileStream(fileName, FileMode.OpenOrCreate))
             {
-                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<Person>));
-                personList = (List<Person>)xmlSerializer.Deserialize(fileStream);
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<T>));
+                personList = (List<T>)xmlSerializer.Deserialize(fileStream);
                 return personList;
             }
         }
 
-        public List<Person> GetAll()
+        public List<T> GetAll()
         {
-            return loadFromXML();
-        }
-
-        public List<Person> GetByName(string name)
-        {
-            personList = loadFromXML();
-            return personList.FindAll(x => x.FullName.Contains(name));
-        }
-
-        public void DeleteById(string name)
-        {
-            personList = loadFromXML();
-            personList.RemoveAll(x => x.FullName.Contains(name));
-            SaveToXML();
-        }
-
-        public void Insert(Person person)
-        {
-            personList = loadFromXML();
-            personList.Add(person);
-            SaveToXML();
+            return LoadFromXML();
         }
 
 
-        public Person GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
 
         public void DeleteById(int id)
         {
-            throw new NotImplementedException();
+            var item = GetById(id);
+            personList.Remove(item);
+
+            SaveToXML();
         }
 
-        List<Person> IPersonAccessor.GetAll()
+        public void Insert(T item)
         {
-            throw new NotImplementedException();
+            item.Id = this.personList.Any(x => true) ? this.personList.Select(x => x.Id).Max() + 1 : 1;
+            personList.Add(item);
+
+            SaveToXML();
         }
 
-        List<Person> IPersonAccessor.GetByName(string name)
+
+        public T GetById(int id)
         {
-            throw new NotImplementedException();
+            return LoadFromXML().Find(x => x.Id == id);
         }
 
-        Person IPersonAccessor.GetById(int id)
-        {
-            throw new NotImplementedException();
-        }
 
-        void IPersonAccessor.DeleteById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        void IPersonAccessor.Insert(Person person)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

@@ -3,37 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Persons.DataEntity;
+using Persons.Data;
 
-namespace Persons
+namespace Persons.Accessors
 {
-    public class MemoryPersonAccessor : IPersonAccessor
+    public class MemoryPersonAccessor<T> : IEntityAccessor<T> where T : Person
     {
- 
+        private List<T> persons = new List<T>();
 
-        public List<Person> GetAll()
+        public MemoryPersonAccessor()
         {
-            return MemoryDB.Database;
+            foreach (Person p in MemoryDB.Database)
+            {
+                persons.Add((T) p);
+            }
         }
 
-        public List<Person> GetByName(string name)
+
+        public List<T> GetAll()
         {
-            return MemoryDB.Database.FindAll(x => x.FullName.Contains(name));
+            return persons;
         }
+
 
         public void DeleteById(int id)
         {
-            MemoryDB.Database.RemoveAll(x => x.Id.Equals(id));
+            persons.RemoveAll(x => x.Id.Equals(id));
         }
 
-        public void Insert(Person person)
+        public void Insert(T item)
         {
-            MemoryDB.Database.Add(person);
+            persons.Add(item);
         }
 
 
-        public Person GetById(int id)
+        public T GetById(int id)
         {
-            return MemoryDB.Database.Find(x => x.Id.Equals(id));
+            return persons.Find(x => x.Id.Equals(id));
         }
 
 
