@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Persons.DataEntity;
+using Companies.DataEntity;
 
-namespace Persons.Accessors
+namespace Companies.Accessors
 {
-    public interface IEntityAccessor<T> where T: BaseEntity
+    public interface IEntityAccessor<T>
     {
         List<T> GetAll();
         T GetById(int id);

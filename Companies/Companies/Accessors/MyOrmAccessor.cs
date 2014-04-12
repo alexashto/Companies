@@ -3,27 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Persons.DataEntity;
+using Companies.DataEntity;
 using System.Data.SqlServerCe;
 using System.Data;
 using System.Reflection;
+using System.Configuration;
 
-namespace Persons.Accessors
+namespace Companies.Accessors
 {
-    class MyOrmAccessor<T> where T: BaseEntity
+    class MyOrmAccessor<T> : IEntityAccessor<T>
     {
         private SqlCeConnection connection;
-        private const string CONNECTION_CONFIGURATION = "Data Source = DataStorage/AppDB.sdf; Password = ''";
+        private string connectionString;
         private string tableName;
-        private List<string> fieldNames = new List<string>();
-        private List<string> fieldTypes = new List<string>();
-        private List<PropertyInfo> objProps = new List<PropertyInfo>();
+        private string idField;
+        private string[] fieldNames;
+        private string[] fieldTypes;
+        private PropertyInfo[] objProps;
         int idFieldIndex;
 
         public MyOrmAccessor()
         {
+            connectionString = ConfigurationManager.ConnectionStrings["AppDBConnectionString"].ConnectionString;
             GetTableInfo();
-
         }
 
         ~MyOrmAccessor()
@@ -40,18 +42,28 @@ namespace Persons.Accessors
 
             PropertyInfo[] props = entityType.GetProperties();
 
+            List<string> fieldNamesList = new List<string>();
+            List<string> fieldTypesList = new List<string>();
+            List<PropertyInfo> objPropsList = new List<PropertyInfo>();
+
             foreach (var p in props)
             {
                 FieldAttribute fieldAttr = (FieldAttribute)p.GetCustomAttribute(typeof(FieldAttribute), false);
 
-                fieldNames.Add(fieldAttr.FieldName);
-                fieldTypes.Add(fieldAttr.FieldType);
-                objProps.Add(p);
- 
+                fieldNamesList.Add(fieldAttr.FieldName);
+                fieldTypesList.Add(fieldAttr.FieldType);
+                objPropsList.Add(p);
             }
 
+            fieldNames = fieldNamesList.ToArray();
+            fieldTypes = fieldTypesList.ToArray();
+            objProps = objPropsList.ToArray();
 
-            for (int i = 0; i < objProps.Count; i++)
+
+
+            idField = ((TableAttribute)entityType.GetCustomAttribute(typeof(TableAttribute), false)).IdField;
+
+            for (int i = 0; i < fieldNames.Length; i++)
             {
                 if (objProps[i].Name.ToLower().Contains("id"))
                 {
@@ -65,13 +77,12 @@ namespace Persons.Accessors
 
         public List<T> GetAll()
         {
-            using (connection = new SqlCeConnection(CONNECTION_CONFIGURATION))
+            using (connection = new SqlCeConnection(connectionString))
             {
                 connection.Open();
                 SqlCeCommand cmd = connection.CreateCommand();
                 cmd.CommandText = string.Format("SELECT {0} FROM {1}", string.Join(", ", fieldNames), tableName);
                 SqlCeDataReader reader = cmd.ExecuteReader();
-
 
                 List<T> result = new List<T>();
 
@@ -79,57 +90,50 @@ namespace Persons.Accessors
                 {
                     var item = Activator.CreateInstance(typeof(T));
 
-                    for (int i = 0; i < fieldNames.Count; i++)
+                    for (int i = 0; i < fieldNames.Length; i++)
                     {
                         objProps[i].SetValue(item, reader[fieldNames[i]]);
                     }
 
                     result.Add((T) item);
                 }
-
-
-                
+          
                 cmd.ExecuteNonQuery();
                 connection.Close();
                 reader.Close();
-
-                 
+            
                 return result;
             }
             
         }
 
 
-        public void DeleteById(int Id) 
+        public void DeleteById(int id) 
         {
-    
-
-            using (connection = new SqlCeConnection(CONNECTION_CONFIGURATION))
+            using (connection = new SqlCeConnection(connectionString))
             {
+                string query = string.Format("DELETE FROM {0} WHERE {1} = @Id", tableName, idField);
 
-                string query = string.Format("DELETE FROM {0} WHERE {1} = @Id", tableName, fieldNames[idFieldIndex]);
-
-                using (SqlCeCommand cmd = new SqlCeCommand("DELETE FROM PersonTable WHERE IdField = @Id", connection))
+                using (SqlCeCommand cmd = new SqlCeCommand(query, connection))
                 {
-                    cmd.Parameters.Add("@Id", SqlDbType.Int, 4).Value = Id;
+                    cmd.Parameters.AddWithValue("@Id", id);
                     connection.Open();
                     cmd.ExecuteNonQuery();
                     connection.Close();
                 }
             }
-
         }
 
         public void Insert(T item)
         {
-            using (connection = new SqlCeConnection(CONNECTION_CONFIGURATION))
+            using (connection = new SqlCeConnection(connectionString))
             {
                 string[] fldNames = fieldNames.ToArray();
                 fldNames = fldNames.Where(w => w != fldNames[idFieldIndex]).ToArray();
                 string query = string.Format("INSERT INTO {0} ({1}) VALUES (@{2})", tableName, string.Join(", ", fldNames), string.Join(", @", fldNames));
                 using (SqlCeCommand cmd = new SqlCeCommand(query, connection))
                 {
-                    for (int i = 0; i < fieldNames.Count; i++)
+                    for (int i = 0; i < fieldNames.Length; i++)
                     {
                         if (i != idFieldIndex)
                         {
@@ -140,7 +144,6 @@ namespace Persons.Accessors
                     cmd.ExecuteNonQuery();
                     connection.Close();
                 }
-
             }
         }
 
@@ -149,15 +152,16 @@ namespace Persons.Accessors
 
         public T GetById(int id)
         {
-            using (connection = new SqlCeConnection(CONNECTION_CONFIGURATION))
+            using (connection = new SqlCeConnection(connectionString))
             {
                 connection.Open();
 
-                string query = string.Format("SELECT {0} FROM {1} WHERE {2} = @Id", string.Join(", ", fieldNames), tableName, fieldNames[idFieldIndex]);
+                string query = string.Format("SELECT {0} FROM {1} WHERE {2} = @Id", string.Join(", ", fieldNames), tableName, idField);
 
                 SqlCeCommand cmd = connection.CreateCommand();
                 cmd.CommandText = query;
-                cmd.Parameters.Add("@Id", SqlDbType.Int, 4).Value = id;
+
+                cmd.Parameters.AddWithValue("@Id", id);
 
                 SqlCeDataReader reader = cmd.ExecuteReader();
 
@@ -165,24 +169,20 @@ namespace Persons.Accessors
 
                 if (reader.Read())
                 {
-                    for (int i = 0; i < fieldNames.Count; i++)
+                    for (int i = 0; i < fieldNames.Length; i++)
                     {
                         objProps[i].SetValue(result, reader[fieldNames[i]]);
                     }
  
                 }
                 
-               
                 cmd.ExecuteNonQuery();
                 connection.Close();
                 reader.Close();
 
-
                 return (T) result;
             }
         }
-
-
 
     }
 }

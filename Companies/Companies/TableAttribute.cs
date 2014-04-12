@@ -4,14 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Persons
+namespace Companies
 {
     class TableAttribute : Attribute
     {
         public string  TableName { get; set; }
-        public TableAttribute(string name)
+        public string IdField { get; set; }
+        public TableAttribute(string name, string idField)
         {
             TableName = name;
+            IdField = idField;
         }
 
         public TableAttribute()

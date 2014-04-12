@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Persons", "Persons\Persons.csproj", "{82B837B2-9AF2-4E59-A2A2-2CEDF81E3BD1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Companies", "Persons\Companies.csproj", "{82B837B2-9AF2-4E59-A2A2-2CEDF81E3BD1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonTests", "PersonTests\PersonTests.csproj", "{D5C3B9C1-E958-4BC9-AB29-0230E7A498A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompaniesTests", "PersonTests\CompaniesTests.csproj", "{D5C3B9C1-E958-4BC9-AB29-0230E7A498A4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleClient", "ConsoleClient\ConsoleClient.csproj", "{E3DF0F61-61A5-4737-AEB1-A4C5E914F8AC}"
 EndProject

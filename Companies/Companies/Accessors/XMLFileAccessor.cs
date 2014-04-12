@@ -6,18 +6,19 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.IO;
 using System.Xml.Serialization;
-using Persons.DataEntity;
+using Companies.DataEntity;
 
 
-namespace Persons.Accessors
+namespace Companies.Accessors
 {
-    class XMLPersonAccessor<T> : IEntityAccessor<T> where T : BaseEntity
+    class XMLFileAccessor<T> : IEntityAccessor<T> where T : BaseEntity
     {
 
-        private List<T> personList;
+        private List<T> items;
         private string fileName;
+        private int lastIndex;
 
-        public XMLPersonAccessor(string fileName)
+        public XMLFileAccessor(string fileName)
         {
             this.fileName = fileName;
         }
@@ -27,7 +28,7 @@ namespace Persons.Accessors
             using (FileStream fileStream = new FileStream(fileName, FileMode.Create))
             {
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<T>));
-                xmlSerializer.Serialize(fileStream, personList);
+                xmlSerializer.Serialize(fileStream, items);
             }
         }
 
@@ -36,8 +37,8 @@ namespace Persons.Accessors
             using (FileStream fileStream = new FileStream(fileName, FileMode.OpenOrCreate))
             {
                 XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<T>));
-                personList = (List<T>)xmlSerializer.Deserialize(fileStream);
-                return personList;
+                items = (List<T>)xmlSerializer.Deserialize(fileStream);
+                return items;
             }
         }
 
@@ -50,16 +51,20 @@ namespace Persons.Accessors
 
         public void DeleteById(int id)
         {
-            var item = GetById(id);
-            personList.Remove(item);
+            items.Remove(GetById(id));
+            if (id == lastIndex)
+            {
+                lastIndex = items.OrderByDescending(x => x.Id).First().Id; //bad: needs to sort to get max
+            }
 
             SaveToXML();
         }
 
         public void Insert(T item)
         {
-            item.Id = this.personList.Any(x => true) ? this.personList.Select(x => x.Id).Max() + 1 : 1;
-            personList.Add(item);
+            lastIndex++;
+            item.Id = lastIndex;
+            items.Add(item);
 
             SaveToXML();
         }
@@ -67,7 +72,7 @@ namespace Persons.Accessors
 
         public T GetById(int id)
         {
-            return LoadFromXML().Find(x => x.Id == id);
+            return LoadFromXML().Find(x => x.Id.Equals(id));
         }
 
 
